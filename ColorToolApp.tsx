@@ -9,8 +9,8 @@ export const ColorToolApp = () => {
 
   return (
     <main>
-      <HexInput />
-      <RgbaInput />
+      <HexInput hex={hex} setHex={setHex} />
+      <RgbaInput rgba={rgba} setRgba={setRgba} />
     </main>
   );
 };
