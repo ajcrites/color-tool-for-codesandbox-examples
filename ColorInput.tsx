@@ -1,5 +1,5 @@
 export const ColorInput = () => {
-  const { hex, setHex, setRgba } = useContext(ColorToolContext);
+  const { hex, dispatch } = useContext(ColorToolContext);
   const input = useRef(null);
 
   const [show, setShow] = useState(true);
@@ -13,8 +13,7 @@ export const ColorInput = () => {
   }, []);
 
   const onChange = ({ target: { value } }) => {
-    setHex(value);
-    setRgba(value);
+    dispatch({ type: 'UPDATE_HEX', payload: value })
   };
 
   return show ? (

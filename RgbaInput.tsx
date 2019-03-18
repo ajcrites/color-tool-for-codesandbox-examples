@@ -1,18 +1,20 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
+import { ColorToolContext } from '~/ColorToolAppContext';
 
-export const RgbaInput = ({ rgba, setRgba }) => {
+export const RgbaInput = () => {
   const inputs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  const { rgba, dispatch } = useContext(ColorToolContext);
   const onChange = () => {
     const colorValues = inputs.map(({ current: { value } }) => value);
 
-    setRgba(colorValues);
+    dispatch({ type: 'UPDATE_RGBA', payload: colorValues });
   };
 
   return (
     <label>
       RGB(A):
       {inputs.map((input, idx) => (
-        <input onChange={onChange} key={'rgba ' + idx} ref={input} />
+        <input onChange={onChange} key={'rgba ' + idx} ref={input} value={rgba[idx]} />
       ))}
     </label>
   );
