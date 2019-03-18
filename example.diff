@@ -1,39 +1,14 @@
 diff --git a/ColorToolApp.tsx b/ColorToolApp.tsx
-index 45a533e..d52c34e 100644
+index d52c34e..fa35a3d 100644
 --- a/ColorToolApp.tsx
 +++ b/ColorToolApp.tsx
-@@ -1,16 +1,31 @@
--import React, { useState } from 'react';
-+import React, { useState, createContext } from 'react';
- 
- import { HexInput } from '~/HexInput';
- import { RgbaInput } from '~/RgbaInput';
- 
-+interface ColorContextProps {
-+  hex: string;
-+  rgba: number[];
-+
-+  setHex: (value) => void;
-+  setRgba: (value) => void;
-+};
-+
-+const ColorContext = createContext<ColorContextProps>({} as any);
-+
- export const ColorToolApp = () => {
-   const [hex, setHex] = useState('');
-   const [rgba, setRgba] = useState(['', '', '', '']);
-+  const state: ColorContextProps = {
-+    hex, rgba, setHex, setRgba,
-+  };
- 
-   return (
-     <main>
--      <HexInput hex={hex} setHex={setHex} />
--      <RgbaInput rgba={rgba} setRgba={setRgba} />
-+      <ColorContext.Producer value={state}>
-+        <HexInput />
-+        <RgbaInput />
-+      </ColorContext.Producer>
-     </main>
-   );
+@@ -6,9 +6,6 @@ import { RgbaInput } from '~/RgbaInput';
+ interface ColorContextProps {
+   hex: string;
+   rgba: number[];
+-
+-  setHex: (value) => void;
+-  setRgba: (value) => void;
  };
+ 
+ const ColorContext = createContext<ColorContextProps>({} as any);

@@ -6,9 +6,6 @@ import { RgbaInput } from '~/RgbaInput';
 interface ColorContextProps {
   hex: string;
   rgba: number[];
-
-  setHex: (value) => void;
-  setRgba: (value) => void;
 };
 
 const ColorContext = createContext<ColorContextProps>({} as any);

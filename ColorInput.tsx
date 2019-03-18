@@ -10,7 +10,7 @@ export const ColorInput = () => {
     if ('!' === input.current.value) {
       setShow(false);
     }
-  });
+  }, []);
 
   const onChange = ({ target: { value } }) => {
     setHex(value);
