@@ -1,20 +1,25 @@
-import React, { useState, createContext } from 'react';
+import React, { useReducer, createContext, Dispatch } from 'react';
 
 import { HexInput } from '~/HexInput';
 import { RgbaInput } from '~/RgbaInput';
+import { colorReducer } from '~/colorReducer';
 
 interface ColorContextProps {
   hex: string;
   rgba: number[];
+
+  dispatch: Dispatch<Action>;
 };
 
 const ColorContext = createContext<ColorContextProps>({} as any);
 
 export const ColorToolApp = () => {
-  const [hex, setHex] = useState('');
-  const [rgba, setRgba] = useState(['', '', '', '']);
+  const [{ hex, rgba }, dispatch] = useReducer(colorReducer, {
+    hex: '',
+    rgba: [0, 0, 0, 0],
+  });
   const state: ColorContextProps = {
-    hex, rgba, setHex, setRgba,
+    hex, rgba, dispatch,
   };
 
   return (
