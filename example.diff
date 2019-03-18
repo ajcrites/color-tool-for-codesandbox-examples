@@ -1,34 +1,39 @@
-diff --git a/RgbaInput.tsx b/RgbaInput.tsx
-index e7309bf..2995b9a 100644
---- a/RgbaInput.tsx
-+++ b/RgbaInput.tsx
-@@ -1,20 +1,19 @@
--import React from 'react';
-+import React, { useRef } from 'react';
+diff --git a/ColorToolApp.tsx b/ColorToolApp.tsx
+index 45a533e..d52c34e 100644
+--- a/ColorToolApp.tsx
++++ b/ColorToolApp.tsx
+@@ -1,16 +1,31 @@
+-import React, { useState } from 'react';
++import React, { useState, createContext } from 'react';
  
- export const RgbaInput = ({ rgba, setRgba }) => {
--  const onChange = idx => ({ target: { value } }) => {
--    const newRgba = [...rgba];
--    newRgba[idx] = value;
-+  const inputs = [useRef(null), useRef(null), useRef(null), useRef(null)];
-+  const onChange = () => {
-+    const colorValues = inputs.map(({ current: { value } }) => value);
+ import { HexInput } from '~/HexInput';
+ import { RgbaInput } from '~/RgbaInput';
  
--    setRgba(newRgba);
-+    setRgba(colorValues);
-   };
++interface ColorContextProps {
++  hex: string;
++  rgba: number[];
++
++  setHex: (value) => void;
++  setRgba: (value) => void;
++};
++
++const ColorContext = createContext<ColorContextProps>({} as any);
++
+ export const ColorToolApp = () => {
+   const [hex, setHex] = useState('');
+   const [rgba, setRgba] = useState(['', '', '', '']);
++  const state: ColorContextProps = {
++    hex, rgba, setHex, setRgba,
++  };
  
    return (
-     <label>
-       RGB(A):
--      <input value={rgba[0]} onChange={onChange(0)} />
--      <input value={rgba[1]} onChange={onChange(1)} />
--      <input value={rgba[2]} onChange={onChange(2)} />
--      <input value={rgba[3]} onChange={onChange(3)} />
-+      {inputs.map((input, idx) => (
-+        <input onChange={onChange} key={'rgba ' + idx} ref={input} />
-+      ))}
-     </label>
+     <main>
+-      <HexInput hex={hex} setHex={setHex} />
+-      <RgbaInput rgba={rgba} setRgba={setRgba} />
++      <ColorContext.Producer value={state}>
++        <HexInput />
++        <RgbaInput />
++      </ColorContext.Producer>
+     </main>
    );
--}
-+};
+ };
