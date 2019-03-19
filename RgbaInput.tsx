@@ -1,5 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import { ColorToolContext } from '~/ColorToolAppContext';
+import { updateRgba } from '~/colorReducer';
 
 export const RgbaInput = () => {
   const inputs = [useRef(null), useRef(null), useRef(null), useRef(null)];
@@ -7,7 +8,7 @@ export const RgbaInput = () => {
   const onChange = () => {
     const colorValues = inputs.map(({ current: { value } }) => value);
 
-    dispatch({ type: 'UPDATE_RGBA', payload: colorValues });
+    dispatch(updateRgba(colorValues));
   };
 
   return (

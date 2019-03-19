@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import { ColorToolContext } from '~/ColorToolAppContext';
+import { updateHex } from '~/colorReducer';
 
 export const HexInput = () => {
   const { hex, dispatch } = useContext(ColorToolContext);
   const onChange = ({ target: { value } }) => {
-    dispatch({ type: 'UPDATE_HEX', payload: value })
+    dispatch(updateHex(value));
   };
 
   return (

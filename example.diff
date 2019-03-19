@@ -1,34 +1,77 @@
-diff --git a/ColorToolApp.tsx b/ColorToolApp.tsx
-index fa35a3d..d041773 100644
---- a/ColorToolApp.tsx
-+++ b/ColorToolApp.tsx
-@@ -1,20 +1,25 @@
--import React, { useState, createContext } from 'react';
-+import React, { useReducer, createContext, Dispatch } from 'react';
+diff --git a/ColorInput.tsx b/ColorInput.tsx
+index f9e3b6f..88acc40 100644
+--- a/ColorInput.tsx
++++ b/ColorInput.tsx
+@@ -13,7 +13,7 @@ export const ColorInput = () => {
+   }, []);
  
- import { HexInput } from '~/HexInput';
- import { RgbaInput } from '~/RgbaInput';
-+import { colorReducer } from '~/colorReducer';
+   const onChange = ({ target: { value } }) => {
+-    dispatch({ type: 'UPDATE_HEX', payload: value })
++    dispatch(updateHex(value));
+   };
  
- interface ColorContextProps {
-   hex: string;
-   rgba: number[];
-+
-+  dispatch: Dispatch<Action>;
- };
+   return show ? (
+diff --git a/HexInput.tsx b/HexInput.tsx
+index d664f31..e582183 100644
+--- a/HexInput.tsx
++++ b/HexInput.tsx
+@@ -1,10 +1,11 @@
+ import React, { useContext } from 'react';
+ import { ColorToolContext } from '~/ColorToolAppContext';
++import { updateHex } from '~/colorReducer';
  
- const ColorContext = createContext<ColorContextProps>({} as any);
- 
- export const ColorToolApp = () => {
--  const [hex, setHex] = useState('');
--  const [rgba, setRgba] = useState(['', '', '', '']);
-+  const [{ hex, rgba }, dispatch] = useReducer(colorReducer, {
-+    hex: '',
-+    rgba: [0, 0, 0, 0],
-+  });
-   const state: ColorContextProps = {
--    hex, rgba, setHex, setRgba,
-+    hex, rgba, dispatch,
+ export const HexInput = () => {
+   const { hex, dispatch } = useContext(ColorToolContext);
+   const onChange = ({ target: { value } }) => {
+-    dispatch({ type: 'UPDATE_HEX', payload: value })
++    dispatch(updateHex(value));
    };
  
    return (
+diff --git a/RgbaInput.tsx b/RgbaInput.tsx
+index ec5da4b..6c7060b 100644
+--- a/RgbaInput.tsx
++++ b/RgbaInput.tsx
+@@ -1,5 +1,6 @@
+ import React, { useContext, useRef } from 'react';
+ import { ColorToolContext } from '~/ColorToolAppContext';
++import { updateRgba } from '~/colorReducer';
+ 
+ export const RgbaInput = () => {
+   const inputs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+@@ -7,7 +8,7 @@ export const RgbaInput = () => {
+   const onChange = () => {
+     const colorValues = inputs.map(({ current: { value } }) => value);
+ 
+-    dispatch({ type: 'UPDATE_RGBA', payload: colorValues });
++    dispatch(updateRgba(colorValues));
+   };
+ 
+   return (
+diff --git a/colorReducer.ts b/colorReducer.ts
+index b3a1412..47e1051 100644
+--- a/colorReducer.ts
++++ b/colorReducer.ts
+@@ -1,8 +1,12 @@
+ import parse from 'parse-color';
++import { getType, createStandardAction, createAction } from 'typesafe-actions';
++
++export const updateHex = createStandardAction('UPDATE_HEX')<string>();
++export const updateRgba = createStandardAction('UPDATE_RGBA')<string>();
+ 
+ export function colorReducer(state = {}, action): ColorContextProps {
+   switch (action.type) {
+-    case 'UPDATE_HEX': {
++    case getType(updateHex): {
+       let nextState = { ...state };
+       const hexColor = action.payload;
+       if (/^#[a-f0-9]{6}$/i.test(hexColor)) {
+@@ -16,7 +20,7 @@ export function colorReducer(state = {}, action): ColorContextProps {
+       return nextState;
+     }
+ 
+-    case 'UPDATE_RGBA': {
++    case getType(updateRgba): {
+       let nextState = { ...state };
+       const rgbaColor = action.payload;
+       if (!rgbaColor.some(isNaN)) {

@@ -13,7 +13,7 @@ export const ColorInput = () => {
   }, []);
 
   const onChange = ({ target: { value } }) => {
-    dispatch({ type: 'UPDATE_HEX', payload: value })
+    dispatch(updateHex(value));
   };
 
   return show ? (

@@ -1,8 +1,12 @@
 import parse from 'parse-color';
+import { getType, createStandardAction, createAction } from 'typesafe-actions';
+
+export const updateHex = createStandardAction('UPDATE_HEX')<string>();
+export const updateRgba = createStandardAction('UPDATE_RGBA')<string>();
 
 export function colorReducer(state = {}, action): ColorContextProps {
   switch (action.type) {
-    case 'UPDATE_HEX': {
+    case getType(updateHex): {
       let nextState = { ...state };
       const hexColor = action.payload;
       if (/^#[a-f0-9]{6}$/i.test(hexColor)) {
@@ -16,7 +20,7 @@ export function colorReducer(state = {}, action): ColorContextProps {
       return nextState;
     }
 
-    case 'UPDATE_RGBA': {
+    case getType(updateRgba): {
       let nextState = { ...state };
       const rgbaColor = action.payload;
       if (!rgbaColor.some(isNaN)) {
